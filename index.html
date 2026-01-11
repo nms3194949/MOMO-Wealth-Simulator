@@ -35,14 +35,15 @@
     header{padding-bottom:18px;margin-bottom:18px;}
     .header-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
     .title-wrap h1{margin:0;font-size:28px;background:var(--gold-grad);-webkit-background-clip:text;color:transparent;}
-    .title-wrap p{margin:6px 0 0 0;color:#8aa0b8;font-size:12px;letter-spacing:.3px;}
 
     .contact-card{
       display:flex;align-items:center;gap:14px;
       padding:10px 14px;border-radius:18px;
       border:1px solid rgba(255,255,255,.06);
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.18));
-      box-shadow:0 10px 30px rgba(0,0,0,.25); min-width: 360px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      min-width: 340px;
+      max-width: 100%;
     }
     .avatar-ring{
       width:54px;height:54px;border-radius:50%;
@@ -262,13 +263,14 @@
     }
     .btn-export-full:hover{transform:translateY(-1px);}
 
+    /* ✅ 修正X軸被裁切：加大底部 padding */
     .chart-wrapper{
       position:relative;height:520px;width:100%;
       background:rgba(0,0,0,.10); border-radius:18px;
-      padding:14px 14px 26px 14px;
+      padding:14px 14px 56px 14px; /* ✅ 原本26 -> 56 */
       border:1px solid rgba(233,209,138,.10); overflow:hidden;
     }
-    .chart-title{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px 0;}
+    .chart-title{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px 0;gap:10px;flex-wrap:wrap;}
     .chart-title h4{margin:0;color:#c9d6e6;font-size:14px;font-weight:900;}
     .badge{
       padding:6px 10px;border-radius:999px; background:rgba(249,226,124,.12);
@@ -299,14 +301,11 @@
       overflow:hidden;
       isolation:isolate;
     }
-    /* ✅ 修改：標題列左右撐開，放置 % 標籤 */
     .metric-top{
       display:flex;align-items:center;justify-content:space-between;gap:10px;
       color:#cfe2ff;font-weight:900;font-size:13px;margin-bottom:6px;width:100%;
     }
-    .metric-title-group {
-      display: flex; align-items: center; gap: 10px;
-    }
+    .metric-title-group { display: flex; align-items: center; gap: 10px; }
 
     .dot{width:12px;height:12px;border-radius:50%;}
     .dot.gold{background:var(--gold-strong);} .dot.blue{background:var(--accent-blue);}
@@ -315,7 +314,7 @@
     .big{font-size:34px;font-weight:900;color:#fff;letter-spacing:.2px;margin:0 0 6px 0;}
     .sub{font-size:12px;color:#91a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; line-height:1.4;}
     .sub b{color:#e9f2ff;}
-    
+
     .pct{
       font-weight:900;
       padding:2px 8px;
@@ -341,7 +340,6 @@
     .lead-pct.positive{ border-color: rgba(52,211,153,.25); background: rgba(52,211,153,.10); color:#a7f3d0; }
     .lead-pct.negative{ border-color: rgba(248,113,113,.25); background: rgba(248,113,113,.10); color:#fecaca; }
 
-    /* 領先卡：漸層金 + 呼吸 + 閃耀 */
     .lead-card{
       border:1px solid rgba(249,226,124,.26);
       box-shadow:
@@ -413,6 +411,35 @@
     .lead-card .metric-top, .lead-card .big, .lead-card .sub, .lead-card .lead-pct{
       position:relative;
       z-index:2;
+    }
+
+    /* ✅ 新增：累積配息金額強光特效（兩張卡） */
+    .glow-amount{
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:.2px;
+      margin:0 0 6px 0;
+      display:inline-block;
+      transform: translateZ(0);
+      animation: glowPulse 2.2s ease-in-out infinite;
+    }
+    .glow-gold{
+      color: var(--gold-strong);
+      text-shadow:
+        0 0 10px rgba(249,226,124,.30),
+        0 0 22px rgba(249,226,124,.18),
+        0 0 38px rgba(249,226,124,.10);
+    }
+    .glow-blue{
+      color: #bfeaff;
+      text-shadow:
+        0 0 10px rgba(56,189,248,.26),
+        0 0 22px rgba(56,189,248,.16),
+        0 0 38px rgba(56,189,248,.10);
+    }
+    @keyframes glowPulse{
+      0%,100%{ filter:saturate(1.05); transform: scale(1); }
+      50%{ filter:saturate(1.20); transform: scale(1.03); }
     }
 
     /* 檢視用 A/B 明細（匯出隱藏） */
@@ -551,6 +578,27 @@
     body.exporting .lead-card::after{
       display:none !important;
     }
+    body.exporting .glow-amount{
+      animation:none !important;
+      transform:none !important;
+      text-shadow:none !important;
+    }
+
+    /* ✅ 平板/手機更穩的響應式 */
+    @media (max-width: 820px){
+      body{ padding:12px; }
+      #report-capture{ padding:20px; border-radius:22px; }
+      .title-wrap h1{ font-size:22px; }
+      .contact-card{ width:100%; min-width:0; justify-content:space-between; }
+      .contact-text .t2{ font-size:16px; }
+      .chart-wrapper{ height:460px; }
+    }
+    @media (max-width: 480px){
+      .chart-wrapper{ height:420px; padding:12px 12px 58px 12px; }
+      .big{ font-size:30px; }
+      .glow-amount{ font-size:30px; }
+      .contact-text .hint{ display:none; }
+    }
   </style>
 </head>
 
@@ -673,7 +721,7 @@
             <input type="number" id="momo-cagr" value="12.77" step="0.01" oninput="update()" />
           </div>
           <div class="sub-input" style="margin-bottom:0">
-            <label>年配息率 (%)（用於推估累積配息線）</label>
+            <label>年配息率 (%)（用於推估累積配息金額）</label>
             <input type="number" id="momo-div" value="6.4" step="0.1" oninput="update()" />
           </div>
         </div>
@@ -695,7 +743,7 @@
             <input type="number" id="bench-cagr" value="1.51" step="0.01" oninput="update()" />
           </div>
           <div class="sub-input" style="margin-bottom:0">
-            <label>年配息率 (%)（用於推估累積配息線）</label>
+            <label>年配息率 (%)（用於推估累積配息金額）</label>
             <input type="number" id="bench-div" value="9.2" step="0.1" oninput="update()" />
           </div>
         </div>
@@ -706,13 +754,14 @@
       <div>
         <div class="chart-wrapper">
           <div class="chart-title">
-            <h4>整合輸出：淨值走勢（不含息）＋ 累積配息（固定用起始本金×配息率）</h4>
+            <h4>整合輸出：淨值走勢（不含息）</h4>
             <div class="badge" id="year-badge">第 3 年</div>
           </div>
           <div class="chart-canvas-wrap"><canvas id="mainChart"></canvas></div>
         </div>
 
         <div class="bottom-grid">
+          <!-- ✅ KPI 第一排：兩張總含息價值 + 領先價值 -->
           <div class="kpi-row">
             <div class="metric-card">
               <div class="metric-top">
@@ -721,12 +770,10 @@
                 </div>
                 <span class="pct" id="momo-nav-pct">+0.0%</span>
               </div>
-              
+
               <div class="big" id="momo-total">$ 0</div>
-              
+
               <div class="sub">期末本金：<b id="momo-principal" style="color:#fff;">$ 0</b></div>
-              <div class="sub">累積領息：<b id="momo-acc-div" style="color:var(--gold-soft);">$ 0</b></div>
-              <div class="sub" style="margin-top:2px;">✨ 平均月領：<b id="momo-monthly" style="color:#fff;">$ 0</b></div>
               <div class="sub" style="margin-top:2px; color:#F87171;">⚠️ 區間最大回撤：<b id="momo-mdd">-0.0%</b></div>
             </div>
 
@@ -737,12 +784,10 @@
                 </div>
                 <span class="pct" id="bench-nav-pct">+0.0%</span>
               </div>
-              
+
               <div class="big" id="bench-total">$ 0</div>
-              
+
               <div class="sub">期末本金：<b id="bench-principal" style="color:#fff;">$ 0</b></div>
-              <div class="sub">累積領息：<b id="bench-acc-div" style="color:#bfeaff;">$ 0</b></div>
-              <div class="sub" style="margin-top:2px;">🔹 平均月領：<b id="bench-monthly" style="color:#cfe2ff;">$ 0</b></div>
               <div class="sub" style="margin-top:2px; color:#F87171;">⚠️ 區間最大回撤：<b id="bench-mdd">-0.0%</b></div>
             </div>
 
@@ -755,11 +800,45 @@
                 </div>
                 <div class="lead-pct" id="lead-pct">+0.0%</div>
               </div>
-              
+
               <div class="big" id="lead-value">$ 0</div>
               <div class="sub">本金差額：<b id="lead-principal-diff">$ 0</b></div>
               <div class="sub">領息差額：<b id="lead-div-diff">$ 0</b></div>
             </div>
+          </div>
+
+          <!-- ✅ KPI 第二排：新增兩張「累積領配息」區塊（寬度與第一張卡一致） -->
+          <div class="kpi-row">
+            <div class="metric-card">
+              <div class="metric-top">
+                <div class="metric-title-group">
+                  <span class="dot gold"></span> MOMO｜累積領配息
+                </div>
+                <span class="pct up" id="momo-div-pct">+0.0%</span>
+              </div>
+
+              <div class="glow-amount glow-gold" id="momo-acc-div-big">$ 0</div>
+
+              <div class="sub">推估方式：<b>起始本金 × 年配息率 × 時間</b></div>
+              <div class="sub">（不影響主圖，僅作現金流比較）</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <div class="metric-title-group">
+                  <span class="dot blue"></span> 原始方案｜累積領配息
+                </div>
+                <span class="pct up" id="bench-div-pct">+0.0%</span>
+              </div>
+
+              <div class="glow-amount glow-blue" id="bench-acc-div-big">$ 0</div>
+
+              <div class="sub">推估方式：<b>起始本金 × 年配息率 × 時間</b></div>
+              <div class="sub">（不影響主圖，僅作現金流比較）</div>
+            </div>
+
+            <!-- ✅ 佔位用：維持三欄等寬（桌機時更整齊） -->
+            <div class="metric-card" style="opacity:0; pointer-events:none;"></div>
           </div>
 
           <div class="selection-preview">
@@ -1369,68 +1448,86 @@
       });
     }
 
-    function updateValidationChart(type){
-      const id = type==='bench' ? 'valBenchChart' : 'valMomoChart';
-      const dataSrc = type==='bench' ? parsedBenchData : parsedMomoData;
-      const names = type==='bench' ? benchFundNames : momoFundNames;
-      const canvas = document.getElementById(id);
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d');
+  function updateValidationChart(type){
+  const id = type==='bench' ? 'valBenchChart' : 'valMomoChart';
+  const names = type==='bench' ? benchFundNames : momoFundNames;
+  const canvas = document.getElementById(id);
+  if(!canvas) return;
 
-      if(dataSrc.length === 0 || names.length === 0){
-        if(type==='bench' && vBenchChart) {vBenchChart.destroy(); vBenchChart=null;}
-        if(type==='momo' && vMomoChart) {vMomoChart.destroy(); vMomoChart=null;}
-        return;
-      }
+  const ctx = canvas.getContext('2d');
 
-      const startIdxs = [];
-      for(let i=0;i<names.length;i++){
-        let s=-1;
-        for(let k=0;k<dataSrc.length;k++){
-          const v = dataSrc[k].vals[i];
-          if(v!==null && v>0){ s=k; break; }
-        }
-        if(s>=0) startIdxs.push(s);
-      }
-      const globalStart = startIdxs.length ? Math.min(...startIdxs) : 0;
+  // 沒選基金就清掉圖
+  if(!names || names.length === 0 || !rawGlobalData || rawGlobalData.length === 0){
+    if(type==='bench' && vBenchChart) { vBenchChart.destroy(); vBenchChart=null; }
+    if(type==='momo' && vMomoChart)  { vMomoChart.destroy(); vMomoChart=null; }
+    return;
+  }
 
-      const labels = dataSrc.slice(globalStart).map(d=>d.date);
+  // ✅ 使用「已前值補齊」的 valsFilled（中途空值會用前一期數值補上）
+  // 找全體基金最早可開始的日期（避免有人前面都還沒資料）
+  const firstIdxs = [];
+  for(const n of names){
+    let s = -1;
+    for(let k=0; k<rawGlobalData.length; k++){
+      const v = rawGlobalData[k].valsFilled[n];
+      if(v !== null && v > 0){ s = k; break; }
+    }
+    if(s >= 0) firstIdxs.push(s);
+  }
+  const globalStart = firstIdxs.length ? Math.min(...firstIdxs) : 0;
 
-      const momoColors  = ['#F9E27C','#F87171','#34D399','#A78BFA','#FB923C','#FFFFFF'];
-      const benchColors = ['#38BDF8','#A78BFA','#34D399','#F9E27C','#FB923C','#F87171','#FFFFFF'];
+  const sliced = rawGlobalData.slice(globalStart);
+  const labels = sliced.map(r => r.dateKey);
 
-      const ds = [];
-      for(let i=0; i<names.length; i++){
-        let startVal=null, startIdxLocal=-1;
-        for(let k=globalStart; k<dataSrc.length; k++){
-          const v = dataSrc[k].vals[i];
-          if(v!==null && v>0){ startVal=v; startIdxLocal = k-globalStart; break; }
-        }
-        const data = dataSrc.slice(globalStart).map((d,idx)=>{
-          const v = d.vals[i];
-          if(startVal===null) return null;
-          if(idx < startIdxLocal) return null;
-          if(v===null) return null;
-          return ((v-startVal)/startVal)*100;
-        });
+  const momoColors  = ['#F9E27C','#F87171','#34D399','#A78BFA','#FB923C','#FFFFFF'];
+  const benchColors = ['#38BDF8','#A78BFA','#34D399','#F9E27C','#FB923C','#F87171','#FFFFFF'];
 
-        const color = (type === 'bench')
-          ? benchColors[i % benchColors.length]
-          : momoColors[i % momoColors.length];
-
-        ds.push({ label:names[i], data, borderColor:color, borderWidth:1.6, pointRadius:0, tension:0.12, spanGaps:false });
-      }
-
-      if(type==='bench'){
-        if(vBenchChart) vBenchChart.destroy();
-        vBenchChart = createVChart(ctx, labels, ds);
-      } else {
-        if(vMomoChart) vMomoChart.destroy();
-        vMomoChart = createVChart(ctx, labels, ds);
+  const ds = names.map((n, i) => {
+    // 這支基金的起始值（第一個可用值）
+    let startVal = null;
+    let startPos = -1;
+    for(let k=0; k<sliced.length; k++){
+      const v = sliced[k].valsFilled[n];
+      if(v !== null && v > 0){
+        startVal = v;
+        startPos = k;
+        break;
       }
     }
 
-    // ✅ 新增：MDD (最大回撤) 計算函式
+    const data = sliced.map((row, idx) => {
+      if(startVal === null) return null;
+      if(idx < startPos) return null;  // 起始點之前不畫（避免從 0% 拉直線）
+      const v = row.valsFilled[n];     // ✅ 這裡不會因中途空值而斷線（已前值補齊）
+      if(v === null) return null;      // 理論上 startPos 之後不會再 null，但留保險
+      return ((v - startVal) / startVal) * 100;
+    });
+
+    const color = (type === 'bench')
+      ? benchColors[i % benchColors.length]
+      : momoColors[i % momoColors.length];
+
+    return {
+      label: n,
+      data,
+      borderColor: color,
+      borderWidth: 1.6,
+      pointRadius: 0,
+      tension: 0.12,
+      spanGaps: true // ✅ 保險：即使偶發 null 也盡量連起來
+    };
+  });
+
+  if(type==='bench'){
+    if(vBenchChart) vBenchChart.destroy();
+    vBenchChart = createVChart(ctx, labels, ds);
+  } else {
+    if(vMomoChart) vMomoChart.destroy();
+    vMomoChart = createVChart(ctx, labels, ds);
+  }
+}
+
+
     function calculateMaxDrawdown(prices) {
       if (!prices || prices.length < 2) return 0;
       let maxPeak = prices[0];
@@ -1445,7 +1542,7 @@
           maxDrawdown = dd;
         }
       }
-      return maxDrawdown * 100; // 回傳百分比
+      return maxDrawdown * 100;
     }
 
     function processHistoryPrincipal(p0, lookbackYears){
@@ -1522,7 +1619,7 @@
       const bp = hist.benchPrincipal.slice();
 
       if(labels.length === 0) {
-        return { labels:[], momoP:[0], benchP:[0], momoCumDiv:[0], benchCumDiv:[0], nowIdx:0, endIndex:0 };
+        return { labels:[], momoP:[0], benchP:[0], momoCumDiv:[0], benchCumDiv:[0], nowIdx:0, histLen:0, endIndex:0 };
       }
 
       const histLen = labels.length;
@@ -1579,11 +1676,19 @@
           responsive:true, maintainAspectRatio:false,
           interaction:{ mode:'index', intersect:false },
           elements:{ point:{ radius:0, hoverRadius:5 } },
-          layout:{ padding:{ bottom: 16, left: 4, right: 6, top: 6 } },
+          /* ✅ 底部留更大，避免X軸日期被裁切 */
+          layout:{ padding:{ bottom: 36, left: 4, right: 6, top: 6 } },
           scales:{
             x:{
               grid:{color:'rgba(255,255,255,0.05)'},
-              ticks:{ color:'#8aa0b8', maxTicksLimit: 10, autoSkip: true, padding: 10, maxRotation: 45, minRotation: 35 }
+              ticks:{
+                color:'#8aa0b8',
+                maxTicksLimit: 10,
+                autoSkip: true,
+                padding: 14,
+                maxRotation: 45,
+                minRotation: 35
+              }
             },
             y:{
               grid:{color:'rgba(255,255,255,0.06)'},
@@ -1659,44 +1764,59 @@
         setLeadCard(0, 1, 0, 0);
         setPctBadge(document.getElementById('momo-nav-pct'), 0);
         setPctBadge(document.getElementById('bench-nav-pct'), 0);
-        document.getElementById('momo-mdd').innerText = "-0.0%";
-        document.getElementById('bench-mdd').innerText = "-0.0%";
+        const mm = document.getElementById('momo-mdd'); if(mm) mm.innerText = "-0.0%";
+        const bm = document.getElementById('bench-mdd'); if(bm) bm.innerText = "-0.0%";
+        const a1 = document.getElementById('momo-acc-div-big'); if(a1) a1.innerText = money(0);
+        const a2 = document.getElementById('bench-acc-div-big'); if(a2) a2.innerText = money(0);
         return;
       }
 
-      // ✅ 視覺優化：建立金色漸層
       const ctx = mainChart.ctx;
       const gradientMomo = ctx.createLinearGradient(0, 0, 0, 400);
-      gradientMomo.addColorStop(0, 'rgba(249, 226, 124, 0.4)'); // 上方較濃
-      gradientMomo.addColorStop(1, 'rgba(249, 226, 124, 0.0)'); // 下方透明
+      gradientMomo.addColorStop(0, 'rgba(249, 226, 124, 0.4)');
+      gradientMomo.addColorStop(1, 'rgba(249, 226, 124, 0.0)');
 
       const segmentStyle = { borderDash: ctx => (ctx.p0DataIndex > s.nowIdx ? [6,6] : undefined) };
 
+      /* ✅ 主圖：移除兩條配息線，只留淨值與初始水位 */
       mainChart.data.labels = s.labels;
       mainChart.data.datasets = [
-        // ✅ 應用漸層色與 fill:1 (填滿到基準線)
-        { 
-          label:'MOMO策略 淨值(不含息)', 
-          data: s.momoP, 
-          borderColor:'#F9E27C', 
-          backgroundColor: gradientMomo, // ✨ 漸層填色
-          borderWidth:3, 
-          cubicInterpolationMode:'monotone', 
-          tension:0.08, 
-          fill:1, // 填滿到 Dataset Index 1 (基準線)
-          segment: segmentStyle 
+        {
+          label:'MOMO策略 淨值(不含息)',
+          data: s.momoP,
+          borderColor:'#F9E27C',
+          backgroundColor: gradientMomo,
+          borderWidth:3,
+          cubicInterpolationMode:'monotone',
+          tension:0.08,
+          fill:1,
+          segment: segmentStyle
         },
-        { label:'比較基準(B) 淨值(不含息)', data: s.benchP, borderColor:'#38BDF8', backgroundColor:'rgba(56,189,248,0.06)', borderWidth:3, cubicInterpolationMode:'monotone', tension:0.08, fill:false, segment: segmentStyle },
-        
-        { label:'MOMO 累積配息(固定推估)', data: s.momoCumDiv, borderColor:'#F9E27C', borderWidth:2, pointRadius:0, tension:0.06, fill:false, borderDash:[6,6] },
-        { label:'基準(B) 累積配息(固定推估)', data: s.benchCumDiv, borderColor:'#34D399', borderWidth:2, pointRadius:0, tension:0.06, fill:false, borderDash:[6,6] },
-        { label:'初始水位', data: s.labels.map(()=> s.momoP[0]), borderColor:'rgba(255,255,255,0.28)', borderWidth:1.5, tension:0, fill:false, borderDash:[3,6] }
+        {
+          label:'比較基準(B) 淨值(不含息)',
+          data: s.benchP,
+          borderColor:'#38BDF8',
+          backgroundColor:'rgba(56,189,248,0.06)',
+          borderWidth:3,
+          cubicInterpolationMode:'monotone',
+          tension:0.08,
+          fill:false,
+          segment: segmentStyle
+        },
+        {
+          label:'初始水位',
+          data: s.labels.map(()=> s.momoP[0]),
+          borderColor:'rgba(255,255,255,0.28)',
+          borderWidth:1.5,
+          tension:0,
+          fill:false,
+          borderDash:[3,6]
+        }
       ];
-
       mainChart.update();
 
       const i = s.endIndex;
-      
+
       const momoP = s.momoP[i] || 0;
       const benchP = s.benchP[i] || 0;
       const momoDiv = s.momoCumDiv[i] || 0;
@@ -1705,99 +1825,82 @@
       const momoTotalWealth = momoP + momoDiv;
       const benchTotalWealth = benchP + benchDiv;
 
-      document.getElementById('momo-total').innerText = money(momoTotalWealth);
-      document.getElementById('bench-total').innerText = money(benchTotalWealth);
-      
-      document.getElementById('momo-principal').innerText = money(momoP);
-      document.getElementById('bench-principal').innerText = money(benchP);
-      
-      if(document.getElementById('momo-acc-div')) 
-         document.getElementById('momo-acc-div').innerText = money(momoDiv);
-      if(document.getElementById('bench-acc-div')) 
-         document.getElementById('bench-acc-div').innerText = money(benchDiv);
+      const mt = document.getElementById('momo-total'); if(mt) mt.innerText = money(momoTotalWealth);
+      const bt = document.getElementById('bench-total'); if(bt) bt.innerText = money(benchTotalWealth);
 
-      const p0 = parseFloat(document.getElementById('p0').value) || 0;
-      const momoDivRate = parseFloat(document.getElementById('momo-div').value) || 0;
-      const benchDivRate = parseFloat(document.getElementById('bench-div').value) || 0;
-      
-      const momoMonthly = (p0 * (momoDivRate / 100)) / 12;
-      const benchMonthly = (p0 * (benchDivRate / 100)) / 12;
+      const mpEl = document.getElementById('momo-principal'); if(mpEl) mpEl.innerText = money(momoP);
+      const bpEl = document.getElementById('bench-principal'); if(bpEl) bpEl.innerText = money(benchP);
 
-      if(document.getElementById('momo-monthly')) 
-         document.getElementById('momo-monthly').innerText = money(momoMonthly);
-      if(document.getElementById('bench-monthly')) 
-         document.getElementById('bench-monthly').innerText = money(benchMonthly);
+      /* ✅ 新增兩張「累積領配息」卡（強光） */
+      const momoAccEl = document.getElementById('momo-acc-div-big');
+      const benchAccEl = document.getElementById('bench-acc-div-big');
+      if(momoAccEl) momoAccEl.innerText = money(momoDiv);
+      if(benchAccEl) benchAccEl.innerText = money(benchDiv);
+
+      /* ✅ 配息卡的 %：用「A 相對 B 的差額占比」 */
+      const momoDivPctEl = document.getElementById('momo-div-pct');
+      const benchDivPctEl = document.getElementById('bench-div-pct');
+      const baseDiv = Math.max(1, benchDiv);
+      const divLeadPct = ((momoDiv - benchDiv) / baseDiv) * 100;
+      if(momoDivPctEl) setPctBadge(momoDivPctEl, divLeadPct);
+      if(benchDivPctEl) setPctBadge(benchDivPctEl, 0); // 你也可以改成顯示自身成長率
 
       const momoStart = s.momoP[0] || 1;
       const benchStart = s.benchP[0] || 1;
       const momoPct = ((momoP / momoStart) - 1) * 100;
       const benchPct = ((benchP / benchStart) - 1) * 100;
-      
+
       setPctBadge(document.getElementById('momo-nav-pct'), momoPct);
       setPctBadge(document.getElementById('bench-nav-pct'), benchPct);
 
-      // ✅ MDD 計算
       const momoHistP = s.momoP.slice(0, s.histLen);
       const benchHistP = s.benchP.slice(0, s.histLen);
-      
+
       const momoMDD = calculateMaxDrawdown(momoHistP);
       const benchMDD = calculateMaxDrawdown(benchHistP);
-      
-      document.getElementById('momo-mdd').innerText = `${momoMDD.toFixed(1)}%`;
-      document.getElementById('bench-mdd').innerText = `${benchMDD.toFixed(1)}%`;
+
+      const mdd1 = document.getElementById('momo-mdd'); if(mdd1) mdd1.innerText = `${momoMDD.toFixed(1)}%`;
+      const mdd2 = document.getElementById('bench-mdd'); if(mdd2) mdd2.innerText = `${benchMDD.toFixed(1)}%`;
 
       const leadValue = momoTotalWealth - benchTotalWealth;
       const principalDiff = momoP - benchP;
       const divDiff = momoDiv - benchDiv;
-      
+
       setLeadCard(leadValue, benchTotalWealth, principalDiff, divDiff);
     }
 
-    // ✅ 關鍵修復：加入強制還原保險機制 (Safety Timer)
     async function exportImg() {
       const t = document.getElementById("report-capture");
-      const originalScrollPos = window.scrollY; // 記住目前捲動位置
-      
-      // 1. 設定「強制還原」的計時器 (保險絲)
-      // 如果 8 秒後 html2canvas 還沒跑完或卡死，這個計時器會強制執行還原，避免畫面卡住
+      const originalScrollPos = window.scrollY;
+
       const safetyTimer = setTimeout(() => {
         console.warn("截圖逾時，強制還原介面");
         cleanupUI();
       }, 8000);
 
-      // 定義還原介面的函式 (把重複的邏輯抽出來)
       function cleanupUI() {
-        clearTimeout(safetyTimer); // 清除保險絲
-        document.body.classList.remove('exporting'); // 移除匯出模式 CSS
-        
-        // 延遲一下再重繪圖表，確保 CSS 動畫已完成，避免圖表寬度計算錯誤
+        clearTimeout(safetyTimer);
+        document.body.classList.remove('exporting');
         setTimeout(() => {
-            try {
-                if(mainChart) mainChart.resize();
-            } catch(e) { console.error("圖表重繪失敗", e); }
-            window.scrollTo(0, originalScrollPos); // 滾回原本位置
+            try { if(mainChart) mainChart.resize(); } catch(e) {}
+            window.scrollTo(0, originalScrollPos);
         }, 100);
       }
 
       try {
-        // 2. 切換模式
         document.body.classList.add('exporting');
-        
-        // 等待 CSS 渲染
         await new Promise(r => setTimeout(r, 300));
 
-        // 3. 執行截圖
         const c = await html2canvas(t, {
           backgroundColor: "#0A1221",
           scale: 2,
-          useCORS: true,      // 允許跨域 (大頭貼)
+          useCORS: true,
           allowTaint: false,
-          scrollY: 0,         // 修正捲動偏移
-          windowWidth: 1280,  // 強制電腦版寬度
-          width: 1180         // 強制裁切寬度
+          scrollY: 0,
+          windowWidth: 1280,
+          width: 1180
         });
 
-        // 4. 下載
         const a = document.createElement("a");
         a.download = "MOMO_Report_GS.png";
         a.href = c.toDataURL();
@@ -1807,7 +1910,6 @@
         console.error("截圖過程發生錯誤:", err);
         alert("截圖失敗，可能是圖片跨域或記憶體不足問題，請重新整理後再試。");
       } finally {
-        // 5. 無論成功或失敗，都執行還原
         cleanupUI();
       }
     }
